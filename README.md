@@ -3,32 +3,28 @@
 This is an example application written in Python for
 introducing users to basic features of Travis CI.
 
-## Fork, and look around
+> This is a second portion of the guided tour of Travis CI.
+> If you haven't done so, please start with the
+> [initial stage](../../tree/01.intro).
 
-First, [fork this repository](https://github.com/travis-ci/travis-intro-python/fork).
+## Sign up for Travis CI
 
-Clone to your local development machine, and have a look around.
+After forking this repository, head over to [travis-ci.com](https://travis-ci.com).
+If you don't yet have a Travis CI account, you would be asked to
+authorize Travis CI to access user data.
 
-```sh-session
-$ git clone https://github.com/OWNER/travis-intro-python.git
-$ cd travis-intro-python
-```
+## Enable GitHub Apps Integration
 
-To start the server, run
+Once you sign up for Travis CI, activate GitHub Apps Integration.
 
-```sh-session
-$ python lib/server.py
-```
+## Install Travis CI
 
-If you visit [http://localhost:8000](http://localhost:8000), you should see
-a bare minimum web page.
-
-You can confirm that the following runs our basic test, and passes:
-
-```sh-session
-$ python test/test_simple_server.py
-```
+You can allow Travis CI to access all your repositories, or select few.
+For the purpose of this Workshop, we allow Travis CI to access only this repository.
+Click on the radio button "Only Select Repositories", and search for
+`travis-intro-python`.
+Select it, and click on "Approve and Install".
 
 ## Next step
 
-Time to head on over to [the next step](../../tree/02.signup).
+You are now ready to run your [first build on Travis CI](../../tree/03.first_build).
