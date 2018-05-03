@@ -7,64 +7,80 @@ introducing users to basic features of Travis CI.
 > If you haven't done so, please start with the
 > [initial stage](../../tree/01.intro).
 
-## What happens after the build?
 
-Testing does not happen in a vacuum.
-Once you've written good tests and are assured of your software's
-quality, the software needs to go out in the world and be put to good
-use.
+## Configuring deployment with GitHub Releases
 
-Travis CI allows you to automate this process for you, using a number
-of different ways to deploy the code.
+Having defined the GitHub token in our repository on Travis CI,
+it is time to configure deployemnt.
 
-## GitHub Releases
+Edit `.travis.yml` to read:
 
-[GitHub Releases](https://help.github.com/articles/about-releases/) is a way
-to associate build artifacts to a tag on your git repository.
+```yaml
+language: python
+script: python test/test_simple_server.py
+# ⬇ new!
+deploy:
+  provider: releases
+  api_key: $GITHUB_OAUTH_TOKEN
+  file: lib/server.py
+  on:
+    tags: true
+```
 
-For example, if you have a library, and have a release, you might want to attach
-a source tarball for the release.
-You will accomplish this by tagging an appropriate commit, creating a tarball,
-and creating a GitHub release with the tarball in it.
+### A note on YAML
 
-You can do this on the [web UI](https://help.github.com/articles/creating-releases/),
-or via [API](https://developer.github.com/v3/repos/releases/#create-a-release).
+Note that YAML is quite strict on the indentation rules.
+Indentations are done with at least 2 white spaces, and
+they indicate the data nesting.
 
-Travis CI automates the API call with the use of [`dpl`](https://github.com/travis-ci/dpl).
-You will interact with `dpl` by giving its configuration in the `deploy` key in
-`.travis.yml`.
+If you are unsure if you wrote valid YAML (or even if you
+are sure), it is a good idea to validate it.
+There are many tools for this, including
+[Online YAML Parser](https://yaml-online-parser.appspot.com/)
+and
+[YAML Validator](https://yamlvalidator.com/).
 
-### Create a GitHub token with `public_repo` scope
+## Tag, push, and deploy!
 
-Before setting up Travis CI for GitHub Releases, we need a special-purpose GitHub
-token that can create a release.
+Commit this change, tag the commit, and push.
 
-Go to the [tokens](https://github.com/settings/tokens) page, and generate a new
-token with `public_repo` scope.
+```sh-session
+$ git add .travis.yml
+$ git commit -m "Deploy to GitHub Releases"
+$ git tag v0.0.1
+$ git push origin --tags
+```
 
-Copy this to your clipboard.
+Upon pushing the tag, you will see a new build at
+https://travis-ci.org/OWNER/travis-intro-ruby/builds.
 
-### Handling GitHub authentication
+## Confirm that a new GitHub Release is created
 
-In order to create a release, you need to provide Travis CI with a GitHub
-token which has appropriate scope.
-Since our repository is public, committing the token in plain text is undesirable.
-To handle such sensitive information, Travis CI allows users to store repository-specific
-secrets.
+At the end of the build, deployment is triggered, and a new release
+will show up with the tag `v0.0.1` in your repository's
+Releases page https://github.com/OWNER/travis-intro-ruby/releases.
 
-To set secure environment variables, go to your repository's Settings page at
-https://travis-ci.org/OWNER/travis-intro-ruby/settings.
+### Troubleshooting
 
-We will create an environment variable which will not be displayed in our logs
-(so that bystanders cannot see it):
+If the release does not show up, check:
 
-1. Name this `GITHUB_OAUTH_TOKEN`
-1. Paste the token into the Value field
-1. Leave the "Display value in build log" in the "OFF" position.
-1. Click on the "Add" button
+1. `GITHUB_OAUTH_TOKEN` has correct scope (`public_repo` or `repo`).
+1. YAML file is indented correctly.
+1. The commit is tagged.
 
-Now, your build can use the `GITHUB_OAUTH_TOKEN` in the build.
+## Congratulations! 🎉
 
-## Next step
+You've made it!
+You have automated a GitHub release process from commiting a code change
+to the release.
 
-In [the grand finale](../../tree/06.deployment-pt2), we will create a GitHub Release!
+## Further Reading
+
+### Continuous Integration
+
+- [Essay on Continuous Integration by Martin Fowler](https://martinfowler.com/articles/continuousIntegration.html)
+- [Continuous Integration](https://www.informit.com/store/continuous-integration-improving-software-quality-and-9780321336385) by Duval, et al.
+
+### Travis CI
+
+- [Documentation](https://docs.travis-ci.com)
