@@ -1,19 +1,22 @@
 import socket
 import sys
 import thread
+import unittest
 
 sys.path.append('lib')
 
 import server
 
-def start_server():
-	server.start()
+class TestServer(unittest.TestCase):
 
-def test_port_is_open():
-	thread.start_new_thread( start_server, () )
-	s = socket.socket()
+	def start_server(args):
+		server.start()
 
-	try:
-		s.connect(('localhost', 8001))
-	except Exception:
-		pytest.fail("Unable to connect to localhost:8000")
+	def test_port_is_open(self):
+		thread.start_new_thread( self.start_server, () )
+		s = socket.socket()
+
+		self.assertIsNone(s.connect(('localhost', 8000)))
+
+if __name__ == '__main__':
+	unittest.main()
