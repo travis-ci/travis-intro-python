@@ -49,7 +49,7 @@ to see the progress.
 ## Observe the build result
 
 Unfortunately, the initial build will fail, because our code does not
-satisfy the assumptions that Travis CI makes about Python repositories.
+satisfy the assumptions that Travis CI makes about Ruby repositories.
 
 ## Next step
 
